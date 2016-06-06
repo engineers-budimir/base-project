@@ -1,13 +1,28 @@
-package com.example.buda.baseproject;
+package com.example.buda.baseproject.view.activity;
 
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.buda.baseproject.ProjectApp;
+
+import butterknife.ButterKnife;
 import timber.log.Timber;
 
 /**
  * Created by Buda on 6/6/2016.
  */
 public abstract class BaseActivity extends AppCompatActivity {
+
+
+    protected abstract int getLayoutId();
+
+    @Override
+    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
+        setContentView(getLayoutId());
+        ButterKnife.bind(this);
+    }
 
     @Override
     protected void onDestroy() {
@@ -19,8 +34,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         Timber.d(this.getClass().getSimpleName() + " onResume");
         ProjectApp.getEventBus().register(this);
-
-        // Update network state
 
         super.onResume();
     }
