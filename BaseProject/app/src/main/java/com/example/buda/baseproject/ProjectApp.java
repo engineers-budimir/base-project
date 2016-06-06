@@ -5,7 +5,10 @@ import android.app.Application;
 import android.os.Bundle;
 
 import com.example.buda.baseproject.database.DatabaseManager;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+import org.greenrobot.eventbus.EventBus;
 
 import timber.log.Timber;
 
@@ -14,15 +17,24 @@ import timber.log.Timber;
  */
 public class ProjectApp extends Application implements Application.ActivityLifecycleCallbacks {
 
+
+    private static EventBus eventBus;
+
+    //Jackson object mapper
+    private static ObjectMapper mMapper = new ObjectMapper();
+
+
     //Initialize Database helper class
     static {
         OpenHelperManager.setOpenHelperClass(DatabaseManager.class);
     }
 
+
+
+
     @Override
     public void onCreate() {
         super.onCreate();
-
 
         // Debug logging
         if (BuildConfig.DEBUG) {
@@ -30,10 +42,34 @@ public class ProjectApp extends Application implements Application.ActivityLifec
             Timber.d("OnCreate Application");
         }
 
+        // Event bus
+        eventBus = new EventBus();
+
+
         //Monitor activity callbacks
         registerActivityLifecycleCallbacks(this);
     }
 
+
+
+    /**
+     * Jackson object mapper
+     * @return
+     */
+    public static ObjectMapper getMapper() {
+        return mMapper;
+    }
+
+    /**
+     * Otto Event Bus.
+     * @return
+     */
+    public static EventBus getEventBus() {
+        return eventBus;
+    }
+
+
+    //----------------------------------------------------------------------------------------------
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
 
